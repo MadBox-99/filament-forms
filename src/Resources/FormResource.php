@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Schemas;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -39,7 +40,7 @@ class FormResource extends Resource
     {
         return $schema
             ->schema([
-                Forms\Components\Section::make('Details')
+                Schemas\Components\Section::make('Details')
                     ->schema([
                         Forms\Components\TextInput::make('title')
                             ->label('Title')
@@ -66,7 +67,7 @@ class FormResource extends Resource
                             ->label('Active')
                             ->default(true),
                     ])->columns(2),
-                Forms\Components\Section::make('Fields')
+                Schemas\Components\Section::make('Fields')
                     ->schema([
                         Forms\Components\Repeater::make('fields')
                             ->label('')
