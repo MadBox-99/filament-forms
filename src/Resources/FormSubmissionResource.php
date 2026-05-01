@@ -3,6 +3,11 @@
 namespace Madbox99\FilamentForms\Resources;
 
 use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -72,18 +77,18 @@ class FormSubmissionResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_read')
                     ->label('Read'),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\Action::make('markAsRead')
+            ->recordActions([
+                ViewAction::make(),
+                Action::make('markAsRead')
                     ->label('Mark as Read')
                     ->icon('heroicon-o-check')
                     ->action(fn (FormSubmission $record) => $record->update(['is_read' => true]))
                     ->visible(fn (FormSubmission $record): bool => ! $record->is_read),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->bulkRecordActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
