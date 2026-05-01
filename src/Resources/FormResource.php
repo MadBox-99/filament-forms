@@ -133,11 +133,11 @@ class FormResource extends Resource
                     ->dateTime('Y-m-d')
                     ->sortable(),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkRecordActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

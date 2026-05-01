@@ -77,7 +77,7 @@ class FormSubmissionResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_read')
                     ->label('Read'),
             ])
-            ->recordActions([
+            ->actions([
                 ViewAction::make(),
                 Action::make('markAsRead')
                     ->label('Mark as Read')
@@ -86,7 +86,7 @@ class FormSubmissionResource extends Resource
                     ->visible(fn (FormSubmission $record): bool => ! $record->is_read),
                 DeleteAction::make(),
             ])
-            ->bulkRecordActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
