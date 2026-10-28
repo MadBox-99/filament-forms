@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Madbox99\FilamentForms\Resources\FormSubmissionResource\Pages;
 
 use Filament\Resources\Pages\ListRecords;
