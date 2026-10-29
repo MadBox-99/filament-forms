@@ -26,15 +26,31 @@ class FormSubmissionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-inbox';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Forms';
-
-    protected static ?string $navigationLabel = 'Submissions';
-
-    protected static ?string $modelLabel = 'Submission';
-
-    protected static ?string $pluralModelLabel = 'Submissions';
-
     protected static ?int $navigationSort = 2;
+
+    #[\Override]
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return static::$navigationGroup ?? __('filament-forms::forms.navigation_group');
+    }
+
+    #[\Override]
+    public static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('filament-forms::submissions.navigation_label');
+    }
+
+    #[\Override]
+    public static function getModelLabel(): string
+    {
+        return static::$modelLabel ?? __('filament-forms::submissions.model_label');
+    }
+
+    #[\Override]
+    public static function getPluralModelLabel(): string
+    {
+        return static::$pluralModelLabel ?? __('filament-forms::submissions.plural_model_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -43,13 +59,13 @@ class FormSubmissionResource extends Resource
                 Schemas\Components\Section::make()
                     ->schema([
                         Forms\Components\Select::make('form_id')
-                            ->label('Form')
+                            ->label(__('filament-forms::submissions.fields.form'))
                             ->relationship('form', 'title')
                             ->disabled(),
                         Forms\Components\Toggle::make('is_read')
-                            ->label('Read'),
+                            ->label(__('filament-forms::submissions.fields.is_read')),
                         Forms\Components\KeyValue::make('data')
-                            ->label('Submitted Data')
+                            ->label(__('filament-forms::submissions.fields.data'))
                             ->disabled()
                             ->columnSpanFull(),
                     ]),
@@ -62,28 +78,28 @@ class FormSubmissionResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('form.title')
-                    ->label('Form')
+                    ->label(__('filament-forms::submissions.fields.form'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_read')
-                    ->label('Read')
+                    ->label(__('filament-forms::submissions.fields.is_read'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Submitted')
+                    ->label(__('filament-forms::submissions.fields.created_at'))
                     ->dateTime('Y-m-d H:i')
                     ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('form')
                     ->relationship('form', 'title')
-                    ->label('Form'),
+                    ->label(__('filament-forms::submissions.fields.form')),
                 Tables\Filters\TernaryFilter::make('is_read')
-                    ->label('Read'),
+                    ->label(__('filament-forms::submissions.fields.is_read')),
             ])
             ->actions([
                 ViewAction::make(),
                 Action::make('markAsRead')
-                    ->label('Mark as Read')
+                    ->label(__('filament-forms::submissions.actions.mark_as_read'))
                     ->icon('heroicon-o-check')
                     ->action(fn (FormSubmission $record) => $record->update(['is_read' => true]))
                     ->visible(fn (FormSubmission $record): bool => ! $record->is_read),

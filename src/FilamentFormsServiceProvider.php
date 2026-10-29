@@ -15,6 +15,7 @@ class FilamentFormsServiceProvider extends PackageServiceProvider
     {
         $package->name(static::$name)
             ->hasConfigFile()
+            ->hasTranslations()
             ->discoversMigrations()
             ->runsMigrations();
     }
