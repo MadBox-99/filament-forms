@@ -9,12 +9,17 @@ class ViewFormSubmission extends ViewRecord
 {
     protected static string $resource = FormSubmissionResource::class;
 
+    /**
+     * Opening a submission marks it read. This runs in mount() because the
+     * page shows an infolist, so the form (and its fill hooks) never loads.
+     */
     #[\Override]
-    protected function mutateFormDataBeforeFill(array $data): array
+    public function mount(int|string $record): void
     {
-        $data['is_read'] = true;
-        $this->record->update(['is_read' => true]);
+        parent::mount($record);
 
-        return $data;
+        if (! $this->record->getAttribute('is_read')) {
+            $this->record->update(['is_read' => true]);
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Madbox99\FilamentForms\Resources;
 
 use BackedEnum;
@@ -26,84 +28,100 @@ class FormResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Forms';
-
-    protected static ?string $navigationLabel = 'Forms';
-
-    protected static ?string $modelLabel = 'Form';
-
-    protected static ?string $pluralModelLabel = 'Forms';
-
     protected static ?int $navigationSort = 1;
+
+    #[\Override]
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return static::$navigationGroup ?? __('filament-forms::forms.navigation_group');
+    }
+
+    #[\Override]
+    public static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('filament-forms::forms.navigation_label');
+    }
+
+    #[\Override]
+    public static function getModelLabel(): string
+    {
+        return static::$modelLabel ?? __('filament-forms::forms.model_label');
+    }
+
+    #[\Override]
+    public static function getPluralModelLabel(): string
+    {
+        return static::$pluralModelLabel ?? __('filament-forms::forms.plural_model_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
-                Schemas\Components\Section::make('Details')
+                Schemas\Components\Section::make(__('filament-forms::forms.sections.details'))
                     ->schema([
                         Forms\Components\TextInput::make('title')
-                            ->label('Title')
+                            ->label(__('filament-forms::forms.fields.title'))
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('slug', Str::slug($state ?? ''))),
                         Forms\Components\TextInput::make('slug')
-                            ->label('URL Slug')
+                            ->label(__('filament-forms::forms.fields.slug'))
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         Forms\Components\Textarea::make('description')
-                            ->label('Description')
+                            ->label(__('filament-forms::forms.fields.description'))
                             ->rows(2),
                         Forms\Components\Textarea::make('success_message')
-                            ->label('Success Message')
+                            ->label(__('filament-forms::forms.fields.success_message'))
                             ->rows(2),
                         Forms\Components\TextInput::make('notification_email')
-                            ->label('Notification Email')
+                            ->label(__('filament-forms::forms.fields.notification_email'))
                             ->email()
-                            ->helperText('Receive notification emails for new submissions'),
+                            ->helperText(__('filament-forms::forms.fields.notification_email_helper')),
                         Forms\Components\Toggle::make('is_active')
-                            ->label('Active')
+                            ->label(__('filament-forms::forms.fields.is_active'))
                             ->default(true),
                     ])->columns(2),
-                Schemas\Components\Section::make('Fields')
+                Schemas\Components\Section::make(__('filament-forms::forms.sections.fields'))
                     ->schema([
                         Forms\Components\Repeater::make('fields')
                             ->label('')
                             ->schema([
                                 Forms\Components\TextInput::make('name')
-                                    ->label('Field Name (technical)')
+                                    ->label(__('filament-forms::forms.form_fields.name'))
                                     ->required()
                                     ->alphaDash(),
                                 Forms\Components\TextInput::make('label')
-                                    ->label('Label')
+                                    ->label(__('filament-forms::forms.form_fields.label'))
                                     ->required(),
                                 Forms\Components\Select::make('type')
-                                    ->label('Type')
+                                    ->label(__('filament-forms::forms.form_fields.type'))
                                     ->options([
-                                        'text' => 'Text',
-                                        'email' => 'Email',
-                                        'phone' => 'Phone',
-                                        'textarea' => 'Textarea',
-                                        'select' => 'Select',
-                                        'checkbox' => 'Checkbox',
-                                        'radio' => 'Radio',
-                                        'file' => 'File Upload',
-                                        'date' => 'Date',
-                                        'number' => 'Number',
+                                        'text' => __('filament-forms::forms.field_types.text'),
+                                        'email' => __('filament-forms::forms.field_types.email'),
+                                        'phone' => __('filament-forms::forms.field_types.phone'),
+                                        'textarea' => __('filament-forms::forms.field_types.textarea'),
+                                        'select' => __('filament-forms::forms.field_types.select'),
+                                        'checkbox' => __('filament-forms::forms.field_types.checkbox'),
+                                        'radio' => __('filament-forms::forms.field_types.radio'),
+                                        'file' => __('filament-forms::forms.field_types.file'),
+                                        'date' => __('filament-forms::forms.field_types.date'),
+                                        'number' => __('filament-forms::forms.field_types.number'),
                                     ])
                                     ->required()
                                     ->live(),
                                 Forms\Components\Textarea::make('options')
-                                    ->label('Options (one per line)')
+                                    ->label(__('filament-forms::forms.form_fields.options'))
                                     ->rows(3)
                                     ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio'])),
                                 Forms\Components\Toggle::make('required')
-                                    ->label('Required')
+                                    ->label(__('filament-forms::forms.form_fields.required'))
                                     ->default(false),
                                 Forms\Components\TextInput::make('placeholder')
-                                    ->label('Placeholder'),
+                                    ->label(__('filament-forms::forms.form_fields.placeholder')),
                             ])
                             ->columns(3)
                             ->reorderable()
@@ -119,18 +137,18 @@ class FormResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Title')
+                    ->label(__('filament-forms::forms.table.title'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
-                    ->label('Slug'),
+                    ->label(__('filament-forms::forms.table.slug')),
                 Tables\Columns\TextColumn::make('submissions_count')
-                    ->label('Submissions')
+                    ->label(__('filament-forms::forms.table.submissions'))
                     ->counts('submissions'),
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Active')
+                    ->label(__('filament-forms::forms.table.is_active'))
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('filament-forms::forms.table.created_at'))
                     ->dateTime('Y-m-d')
                     ->sortable(),
             ])
